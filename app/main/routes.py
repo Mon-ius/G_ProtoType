@@ -31,8 +31,7 @@ def index():
         language = guess_language(form.post.data)
         if language == 'UNKNOWN' or len(language) > 5:
             language = ''
-        post = Post(
-            body=form.post.data, author=current_user, language=language)
+        post = Post(body=form.post.data, author=current_user, language=language)
         db.session.add(post)
         db.session.commit()
         flash(_('Your post is now live!'))
@@ -45,7 +44,7 @@ def index():
     prev_url = url_for('main.explore', page=posts.prev_num) \
         if posts.has_prev else None
     return render_template(
-        'index.html',
+        'main/index.html',
         title=_('Home'),
         form=form,
         posts=posts.items,
@@ -69,7 +68,8 @@ def profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('profile.html', title=_('Edit Profile'), form=form)
+    return render_template(
+        'main/profile.html', title=_('Edit Profile'), form=form)
 
 
 
@@ -84,7 +84,7 @@ def explore():
     prev_url = url_for('main.explore', page=posts.prev_num) \
         if posts.has_prev else None
     return render_template(
-        "index.html",
+        "main/index.html",
         title=_('Explore'),
         posts=posts.items,
         next_url=next_url,
@@ -103,7 +103,7 @@ def user(username):
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
         if posts.has_prev else None
     return render_template(
-        'user.html',
+        'main/user.html',
         user=user,
         posts=posts.items,
         next_url=next_url,
