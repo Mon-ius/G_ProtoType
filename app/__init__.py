@@ -3,7 +3,7 @@ import logging
 from logging.handlers import RotatingFileHandler,SMTPHandler
 from flask import Flask, request, current_app
 from ext import db,migrate,login,mail,bootstrap,moment,babel,Config
-
+from elasticsearch import Elasticsearch
 
 
 
@@ -20,6 +20,8 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     moment.init_app(app)
     babel.init_app(app)
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
